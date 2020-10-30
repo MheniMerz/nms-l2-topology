@@ -1,0 +1,9 @@
+version: '3.4'
+
+services:
+        topology-service:
+                build: .
+                volumes:
+                        - .:/usr/src/app
+                ports:
+                        - 6556:8080
