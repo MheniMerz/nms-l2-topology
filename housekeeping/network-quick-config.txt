@@ -1,0 +1,148 @@
+========================
+ enable ssh on Routers
+========================
+crypto key generate dsa
+
+conf t
+ssh server v2
+commit
+exit
+copy run start
+
+==========================
+copy ssh key for ansible
+==========================
+conf t
+ip ssh pubkey-chain
+username mheni
+key-string 
+AAAAB3NzaC1yc2EAAAADAQABAAABAQDNEudupI5UqOQH/CPSdtu3oRuLu7803Sdu
+oyPNlCmEhAN8Nqy5DCXbD39NOGCfTB2JORoiTH8yktqakMGfShhg6JEqnpcJjzY5PTevZrZ0
+QA9+bP1qgLSNRz19gtp9t7b2NPhTjSr5lAC3AffZiOdMdw3/55dnmScqIhFMFaPsYPNnRpcC
+HrAZi0GICBb/D5b0tv43X/AOnqvBW7WFMQLIY2GS6CzIJlY0YVnjWZ+/FPfCZ9Vlg5zgL5xf
+/rZRaPpcJAHQijjgyfXmC2PiFhZk5x5HCAZZHz46FXsYYtgd62tsJhDJ4PknjdXj/NZwSsVi
+duLnqSTBBhrutsqUDQCp
+
+exit
+exit
+end
+
+wr
+copy run start
+
+
+
+=====================
+ASA ssh config
+=====================
+
+crypto key generate rsa modulus 2048
+username mheni password mheni
+aaa authentication ssh console LOCAL
+ssh version 2
+
+ansible rotuers -m raw -a "en
+conf t
+lldp run
+"
+
+=================================
+        sw1 vlan config
+=================================
+en
+conf t
+int gi0/1
+sw
+sw mo acc
+sw acc vl 10
+no shut
+exit
+int vlan 10
+ip add 10.11.200.09 255.255.255.224
+no shut
+exit
+int g0/2
+sw
+sw mo acc
+sw acc vl 20
+no shut
+exit
+int vlan 20
+ip add 10.11.200.39 255.255.255.224
+no shut
+exit
+exit
+wr
+
+=================================
+        sw2 vlan config
+=================================
+en
+conf t
+int gi0/1
+sw
+sw mo acc
+sw acc vl 30
+no shut
+exit
+int vlan 30
+ip add 10.11.200.139 255.255.255.224
+no shut
+exit
+int g0/2
+sw
+sw mo acc
+sw acc vl 40
+no shut
+exit
+int vlan 40
+ip add 10.11.200.169 255.255.255.224
+no shut
+exit
+exit
+wr
+
+=================================
+        sw3 vlan config
+=================================
+en
+conf t
+int gi0/1
+sw
+sw mo acc
+sw acc vl 50
+no shut
+exit
+int vlan 50
+ip add 10.11.200.69 255.255.255.224
+no shut
+exit
+int g0/2
+sw
+sw mo acc
+sw acc vl 60
+no shut
+exit
+int vlan 60
+ip add 10.11.200.99 255.255.255.224
+no shut
+exit
+exit
+wr
+
+==================================
+ enable ssh on GNS3 switches
+==================================
+conf t
+user mheni secret mheni
+ip domain-name pni.nist.gov
+crypto key generate rsa
+1024
+ip ssh version 2
+line vty 0 15
+login local
+transport input all
+exit
+exit
+wr
+
