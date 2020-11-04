@@ -23,7 +23,7 @@ class Node:
         self.chassis_id = chassis_id
         self.mgmt_ip = mgmt_ip
         self.node_type = lldp_capability_to_device_type(capability)
-        self.interfaces: dict [str, "Interface"] = {}
+        self.ltps: dict [str, "Ltp"] = {}
 
     def to_string(self) -> str:
         result  = "{\n\t"
@@ -31,17 +31,17 @@ class Node:
         result += "chassis_id: "+self.chassis_id +"\n\t"
         result += "management_ip: "+self.mgmt_ip +"\n\t"
         result += "device_type: "+ self.node_type +"\n\t"
-        result += "interfaces: [\n\t"+self.interfaces_to_string()+"]"
+        result += "ltps: [\n\t"+self.ltps_to_string()+"]"
         result += "\n}"
         return result
 
-    def add_interface(self, interface: "Interface") -> None:
-        self.interfaces[interface.name] = interface
+    def add_ltp(self, ltp: "Ltp") -> None:
+        self.ltps[ltp.name] = ltp
     
-    def interfaces_to_string(self) -> str:
+    def ltps_to_string(self) -> str:
         result = ""
-        for k in self.interfaces:
-            result += self.interfaces[k].to_string()
+        for k in self.ltps:
+            result += self.ltps[k].to_string()
         return result
 
     def is_switch(self) -> bool:
