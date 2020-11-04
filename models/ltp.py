@@ -22,18 +22,18 @@ NORMALIZED_LTPS = (
 def normalize_ltp(name: str) -> str:
     match = LTP_NAME_RE.search(name)
     if match:
-        int_type = match.group("ltp_type")
-        normalized_int_type = normalize_ltp_type(int_type)
-        int_num = match.group("ltp_num")
-        return normalized_int_type+int_num
+        ltp_type = match.group("ltp_type")
+        normalized_ltp_type = normalize_ltp_type(ltp_type)
+        ltp_num = match.group("ltp_num")
+        return normalized_ltp_type+ltp_num
     raise ValueError(f"Does not recognize {name} as an ltp name")
 
 def normalize_ltp_type(ltp_type: str) -> str:
-    int_type = ltp_type.strip().lower()
-    for norm_int_type in NORMALIZED_LTPS:
-        if norm_int_type.lower().startswith(int_type):
-            return norm_int_type
-    return int_type
+    ltp_type = ltp_type.strip().lower()
+    for norm_ltp_type in NORMALIZED_LTPS:
+        if norm_ltp_type.lower().startswith(ltp_type):
+            return norm_ltp_type
+    return ltp_type
 
 class Ltp:
 
