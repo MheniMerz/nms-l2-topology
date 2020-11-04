@@ -1,11 +1,11 @@
 import json
 import re 
 
-INTERFACE_NAME_RE = re.compile(
+LTP_NAME_RE = re.compile(
      r"(?P<interface_type>[a-zA-Z\-_ ]*)(?P<interface_num>[\d.\/]*)"
  )
  
-NORMALIZED_INTERFACES = (
+NORMALIZED_LTPS= (
      "FastEthernet",
      "GigabitEthernet",
      "TenGigabitEthernet",
@@ -20,17 +20,17 @@ NORMALIZED_INTERFACES = (
 )
 
 def normalize_interface(name: str) -> str:
-    match = INTERFACE_NAME_RE.search(name)
+    match = LTP_NAME_RE.search(name)
     if match:
         int_type = match.group("interface_type")
         normalized_int_type = normalize_interface_type(int_type)
         int_num = match.group("interface_num")
         return normalized_int_type+int_num
-    raise ValueError(f"Does not recognize {interface_name} as an interface name")
+    raise ValueError(f"Does not recognize {name} as an interface name")
 
 def normalize_interface_type(interface_type: str) -> str:
     int_type = interface_type.strip().lower()
-    for norm_int_type in NORMALIZED_INTERFACES:
+    for norm_int_type in NORMALIZED_LTPS:
         if norm_int_type.lower().startswith(int_type):
             return norm_int_type
     return int_type
