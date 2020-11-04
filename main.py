@@ -5,8 +5,8 @@ from types import SimpleNamespace
 import concurrent.futures
 from ntc_templates.parse import parse_output
 from models.node import Node
-import models.interface
-from models.interface import Interface
+import models.ltp
+from models.ltp import Ltp
 from models.link import Link
 
 def run_cmd(ip, dev_type, username, password, command):
@@ -17,7 +17,7 @@ def run_cmd(ip, dev_type, username, password, command):
             username=username,
             password=password,
     )
-    # run the first command to get the interfaces on the current node
+    # run the first command to get the ltps on the current node
     result = connection.send_command(command)
     # use ntc_templates to parse the output into json
     parsed_result = parse_output(
@@ -54,13 +54,13 @@ def get_nodes():
                         i.chassis_id, 
                         i.management_ip, 
                         i.capabilities)
-            if i.local_interface != "" and i.neighbor_interface != "":
+            if i.local_ltp != "" and i.neighbor_ltp != "":
                 links[device+"<->"+nb]= Link(
-                        [Interface(i.local_interface,"","","","",device),
-                        Interface(i.neighbor_interface,"","","","",nb)]
+                        [Ltp(i.local_ltp,"","","","",device),
+                        Ltp(i.neighbor_ltp,"","","","",nb)]
                         )                
 
-def get_interfaces():
+def get_ltps():
     threads = list()
     for device in json.loads(config['TARGETS']['devices']):
         with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -70,22 +70,22 @@ def get_interfaces():
                     "cisco_ios",
                     config['AUTH']['username'],
                     config['AUTH']['password'],
-                    "show interface"
+                    "show ltp"
                     )
             return_value = future.result()
         ints = json.loads(return_value, object_hook=lambda d: SimpleNamespace(**d))
         for i in ints:
-            nodes[device].add_interface(Interface(
-                i.interface,
+            nodes[device].add_ltp(Ltp(
+                i.ltp,
                 i.link_status,
                 i.protocol_status,
                 i.ip_address,
                 i.address,
                 device
                 ))
-        set_vlan_for_interface(nodes[device])
+        set_vlan_for_ltp(nodes[device])
 
-def set_vlan_for_interface(device):
+def set_vlan_for_ltp(device):
     if device.is_switch():
         dev_name = device.name_from_fqdn()
         with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -95,14 +95,14 @@ def set_vlan_for_interface(device):
                     "cisco_ios",
                     config['AUTH']['username'],
                     config['AUTH']['password'],
-                    "show interfaces switchport"
+                    "show ltps switchport"
                     )
             return_value = future.result()
             ports= json.loads(return_value, object_hook=lambda d: SimpleNamespace(**d))
             for p in ports:
-                tmp = models.interface.normalize_interface(p.interface)
-                nodes[dev_name].interfaces[tmp].assign_access_vlan(p.access_vlan)
-                nodes[dev_name].interfaces[tmp].assign_native_vlan(p.native_vlan)
+                tmp = models.ltp.normalize_ltp(p.ltp)
+                nodes[dev_name].ltps[tmp].assign_access_vlan(p.access_vlan)
+                nodes[dev_name].ltps[tmp].assign_native_vlan(p.native_vlan)
 
 # open config file
 config = configparser.ConfigParser()
@@ -123,7 +123,7 @@ if 'TARGETS' not in config or 'AUTH' not in config:
     exit(1)
 
 get_nodes()
-get_interfaces()
+get_ltps()
 
 #for l in links:
 #    print(l +":"+links[l].to_string())

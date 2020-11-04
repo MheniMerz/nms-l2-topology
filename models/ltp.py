@@ -5,7 +5,7 @@ LTP_NAME_RE = re.compile(
      r"(?P<interface_type>[a-zA-Z\-_ ]*)(?P<interface_num>[\d.\/]*)"
  )
  
-NORMALIZED_LTPS= (
+NORMALIZED_LTPS = (
      "FastEthernet",
      "GigabitEthernet",
      "TenGigabitEthernet",
@@ -19,26 +19,26 @@ NORMALIZED_LTPS= (
      "Management",
 )
 
-def normalize_interface(name: str) -> str:
+def normalize_ltp(name: str) -> str:
     match = LTP_NAME_RE.search(name)
     if match:
-        int_type = match.group("interface_type")
-        normalized_int_type = normalize_interface_type(int_type)
-        int_num = match.group("interface_num")
+        int_type = match.group("ltp_type")
+        normalized_int_type = normalize_ltp_type(int_type)
+        int_num = match.group("ltp_num")
         return normalized_int_type+int_num
     raise ValueError(f"Does not recognize {name} as an interface name")
 
-def normalize_interface_type(interface_type: str) -> str:
-    int_type = interface_type.strip().lower()
+def normalize_ltp_type(ltp_type: str) -> str:
+    int_type = ltp_type.strip().lower()
     for norm_int_type in NORMALIZED_LTPS:
         if norm_int_type.lower().startswith(int_type):
             return norm_int_type
     return int_type
 
-class Interface:
+class Ltp:
 
     def __init__(self, name: str, l_status: str, p_status: str, ip: str, mac: str, node_id: str):
-        self.name = normalize_interface(name)
+        self.name = normalize_ltp(name)
         self.link_status = l_status
         self.protocol_status = p_status
         self.ip_address = ip
