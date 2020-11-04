@@ -54,10 +54,10 @@ def get_nodes():
                         i.chassis_id, 
                         i.management_ip, 
                         i.capabilities)
-            if i.local_ltp != "" and i.neighbor_ltp != "":
+            if i.local_interface != "" and i.neighbor_interface != "":
                 links[device+"<->"+nb]= Link(
-                        [Ltp(i.local_ltp,"","","","",device),
-                        Ltp(i.neighbor_ltp,"","","","",nb)]
+                        [Ltp(i.local_interface,"","","","",device),
+                        Ltp(i.neighbor_interface,"","","","",nb)]
                         )                
 
 def get_ltps():
@@ -70,13 +70,13 @@ def get_ltps():
                     "cisco_ios",
                     config['AUTH']['username'],
                     config['AUTH']['password'],
-                    "show ltp"
+                    "show interface"
                     )
             return_value = future.result()
         ints = json.loads(return_value, object_hook=lambda d: SimpleNamespace(**d))
         for i in ints:
             nodes[device].add_ltp(Ltp(
-                i.ltp,
+                i.interface,
                 i.link_status,
                 i.protocol_status,
                 i.ip_address,
@@ -95,12 +95,12 @@ def set_vlan_for_ltp(device):
                     "cisco_ios",
                     config['AUTH']['username'],
                     config['AUTH']['password'],
-                    "show ltps switchport"
+                    "show interfaces switchport"
                     )
             return_value = future.result()
             ports= json.loads(return_value, object_hook=lambda d: SimpleNamespace(**d))
             for p in ports:
-                tmp = models.ltp.normalize_ltp(p.ltp)
+                tmp = models.ltp.normalize_ltp(p.interface)
                 nodes[dev_name].ltps[tmp].assign_access_vlan(p.access_vlan)
                 nodes[dev_name].ltps[tmp].assign_native_vlan(p.native_vlan)
 

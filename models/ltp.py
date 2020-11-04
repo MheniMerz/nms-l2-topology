@@ -2,7 +2,7 @@ import json
 import re 
 
 LTP_NAME_RE = re.compile(
-     r"(?P<interface_type>[a-zA-Z\-_ ]*)(?P<interface_num>[\d.\/]*)"
+     r"(?P<ltp_type>[a-zA-Z\-_ ]*)(?P<ltp_num>[\d.\/]*)"
  )
  
 NORMALIZED_LTPS = (
@@ -26,7 +26,7 @@ def normalize_ltp(name: str) -> str:
         normalized_int_type = normalize_ltp_type(int_type)
         int_num = match.group("ltp_num")
         return normalized_int_type+int_num
-    raise ValueError(f"Does not recognize {name} as an interface name")
+    raise ValueError(f"Does not recognize {name} as an ltp name")
 
 def normalize_ltp_type(ltp_type: str) -> str:
     int_type = ltp_type.strip().lower()
