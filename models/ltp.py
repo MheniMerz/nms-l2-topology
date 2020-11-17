@@ -37,36 +37,34 @@ def normalize_ltp_type(ltp_type: str) -> str:
 
 class Ltp:
 
-    def __init__(self, name: str, l_status: str, p_status: str, ip: str, mac: str, node_id: str):
+    def __init__(self, name: str, l_status: str, p_status: str, node_id: str):
         self.name = normalize_ltp(name)
         self.link_status = l_status
         self.protocol_status = p_status
-        self.ip_address = ip
-        self.mac_address = mac
-        self.access_vlan = ""
         self.native_vlan = "1"
         self.node = node_id
 
+        self.ctps: dict [str, "Ctp"] = {}
+
     def to_string(self) -> str:
         result = "{\n\t"
+        result += "node: "+self.node+"\n\t"
         result += "name: "+self.name +"\n\t"
         result += "link_status: "+self.link_status +"\n\t"
         result += "protocol_status: "+self.protocol_status +"\n\t"
-        result += "ip_address: "+self.ip_address+"\n\t"
-        result += "mac_address: "+self.mac_address+"\n\t"
-        result += "access_vlan: "+self.access_vlan +"\n\t"
+        result += "ctps: ["+ self.ctps_to_string()+"]\n\t"
         result += "native_vlan: "+self.native_vlan +"\n\t"
-        result += "node: "+self.node+"\n\t"
         result += "}\n\t"
         return result
-    
-    def assign_access_vlan(self, vlan:str):
-        self.access_vlan = vlan
+
+    def add_ctp(self, ctp:"Ctp") -> None:
+        self.ctps[ctp.name] = ctp
 
     def assign_native_vlan(self, vlan:str):
         self.native_vlan = vlan
 
-
-
-
-
+    def ctps_to_string(self) -> str:
+        result =""
+        for k in self.ctps:
+            result +=self.ctps[k].to_string()
+        return result

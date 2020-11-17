@@ -1,16 +1,17 @@
 import netmiko
+import configparser
+import json
+import concurrent.futures
 from netmiko.ssh_exception import  NetMikoTimeoutException
 from paramiko.ssh_exception import SSHException 
 from netmiko.ssh_exception import  AuthenticationException
-import configparser
-import json
 from types import SimpleNamespace
-import concurrent.futures
 from ntc_templates.parse import parse_output
 
-from models.node import Node
 import models.ltp
+from models.node import Node
 from models.ltp import Ltp
+from models.ctp import Ctp
 from models.link import Link
 
 def run_cmd(ip, dev_type, username, password, command):
@@ -73,8 +74,8 @@ def get_nodes():
                         i.capabilities)
             if i.local_interface != "" and i.neighbor_interface != "":
                 links[device+"<->"+nb]= Link(
-                        [Ltp(i.local_interface,"","","","",device),
-                        Ltp(i.neighbor_interface,"","","","",nb)]
+                        [Ltp(i.local_interface,"","",device),
+                        Ltp(i.neighbor_interface,"","",nb)]
                         )                
 
 def get_ltps():
@@ -96,8 +97,16 @@ def get_ltps():
                 i.interface,
                 i.link_status,
                 i.protocol_status,
-                i.ip_address,
+                #i.ip_address,
+                #i.address,
+                device
+                ))
+            nodes[device].ltps[i.interface].add_ctp(Ctp(
+                i.interface,
                 i.address,
+                i.ip_address,
+                "1",
+                i.interface,
                 device
                 ))
         set_vlan_for_ltp(nodes[device])
@@ -118,7 +127,7 @@ def set_vlan_for_ltp(device):
             ports= json.loads(return_value, object_hook=lambda d: SimpleNamespace(**d))
             for p in ports:
                 tmp = models.ltp.normalize_ltp(p.interface)
-                nodes[dev_name].ltps[tmp].assign_access_vlan(p.access_vlan)
+                nodes[dev_name].ltps[tmp].ctps[tmp].assign_access_vlan(p.access_vlan)
                 nodes[dev_name].ltps[tmp].assign_native_vlan(p.native_vlan)
 
 # open config file
