@@ -1,0 +1,1119 @@
+sh3:{
+	hostname: SH3.pni.nist.gov
+	chassis_id: aabb.cc00.0400
+	management_ip: 10.11.200.201
+	device_type: Router
+	ltps: [
+	{
+	node: sh3
+	name: Ethernet0/0
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet0/0
+		ip_address: 
+		mac_address: aabb.cc00.0400
+		access_vlan: 1
+		}
+		{
+		name: Ethernet0/0.50
+		ip_address: 10.11.200.65/27
+		mac_address: aabb.cc00.0400
+		access_vlan: 1
+		}
+		{
+		name: Ethernet0/0.60
+		ip_address: 10.11.200.97/27
+		mac_address: aabb.cc00.0400
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh3
+	name: Ethernet0/1
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet0/1
+		ip_address: 
+		mac_address: aabb.cc00.0410
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh3
+	name: Ethernet0/2
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet0/2
+		ip_address: 10.11.200.205/30
+		mac_address: aabb.cc00.0420
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh3
+	name: Ethernet0/3
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet0/3
+		ip_address: 10.11.200.201/30
+		mac_address: aabb.cc00.0430
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh3
+	name: Ethernet1/0
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet1/0
+		ip_address: 
+		mac_address: aabb.cc00.0401
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh3
+	name: Ethernet1/1
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet1/1
+		ip_address: 
+		mac_address: aabb.cc00.0411
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh3
+	name: Ethernet1/2
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet1/2
+		ip_address: 
+		mac_address: aabb.cc00.0421
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh3
+	name: Ethernet1/3
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet1/3
+		ip_address: 
+		mac_address: aabb.cc00.0431
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh3
+	name: Serial2/0
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial2/0
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh3
+	name: Serial2/1
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial2/1
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh3
+	name: Serial2/2
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial2/2
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh3
+	name: Serial2/3
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial2/3
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh3
+	name: Serial3/0
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial3/0
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh3
+	name: Serial3/1
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial3/1
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh3
+	name: Serial3/2
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial3/2
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh3
+	name: Serial3/3
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial3/3
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh3
+	name: Loopback0
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Loopback0
+		ip_address: 3.3.3.3/32
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	]
+}
+sh2:{
+	hostname: SH2.pni.nist.gov
+	chassis_id: aabb.cc00.0300
+	management_ip: 10.11.200.197
+	device_type: Router
+	ltps: [
+	{
+	node: sh2
+	name: Ethernet0/0
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet0/0
+		ip_address: 
+		mac_address: aabb.cc00.0300
+		access_vlan: 1
+		}
+		{
+		name: Ethernet0/0.30
+		ip_address: 10.11.200.129/27
+		mac_address: aabb.cc00.0300
+		access_vlan: 1
+		}
+		{
+		name: Ethernet0/0.40
+		ip_address: 10.11.200.161/27
+		mac_address: aabb.cc00.0300
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh2
+	name: Ethernet0/1
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet0/1
+		ip_address: 
+		mac_address: aabb.cc00.0310
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh2
+	name: Ethernet0/2
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet0/2
+		ip_address: 10.11.200.197/30
+		mac_address: aabb.cc00.0320
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh2
+	name: Ethernet0/3
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet0/3
+		ip_address: 10.11.200.206/30
+		mac_address: aabb.cc00.0330
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh2
+	name: Ethernet1/0
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet1/0
+		ip_address: 
+		mac_address: aabb.cc00.0301
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh2
+	name: Ethernet1/1
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet1/1
+		ip_address: 
+		mac_address: aabb.cc00.0311
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh2
+	name: Ethernet1/2
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet1/2
+		ip_address: 
+		mac_address: aabb.cc00.0321
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh2
+	name: Ethernet1/3
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet1/3
+		ip_address: 
+		mac_address: aabb.cc00.0331
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh2
+	name: Serial2/0
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial2/0
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh2
+	name: Serial2/1
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial2/1
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh2
+	name: Serial2/2
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial2/2
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh2
+	name: Serial2/3
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial2/3
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh2
+	name: Serial3/0
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial3/0
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh2
+	name: Serial3/1
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial3/1
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh2
+	name: Serial3/2
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial3/2
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh2
+	name: Serial3/3
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial3/3
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh2
+	name: Loopback0
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Loopback0
+		ip_address: 2.2.2.2/32
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	]
+}
+sw1:{
+	hostname: sw1.pni.nist.gov
+	chassis_id: 0c9d.5f11.d800
+	management_ip: 10.11.200.9
+	device_type: Switch
+	ltps: [
+	{
+	node: sw1
+	name: GigabitEthernet0/0
+	link_status: up
+	protocol_status: up (connected)
+	native_vlan: 1
+	ctps: [
+		{
+		name: GigabitEthernet0/0
+		ip_address: 
+		mac_address: 0c9d.5f11.d800
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sw1
+	name: GigabitEthernet0/1
+	link_status: up
+	protocol_status: up (connected)
+	native_vlan: 1
+	ctps: [
+		{
+		name: GigabitEthernet0/1
+		ip_address: 
+		mac_address: 0c9d.5f11.d801
+		access_vlan: unassigned
+		}
+		]
+	}
+	{
+	node: sw1
+	name: GigabitEthernet0/2
+	link_status: up
+	protocol_status: up (connected)
+	native_vlan: 1
+	ctps: [
+		{
+		name: GigabitEthernet0/2
+		ip_address: 
+		mac_address: 0c9d.5f11.d802
+		access_vlan: unassigned
+		}
+		]
+	}
+	{
+	node: sw1
+	name: GigabitEthernet0/3
+	link_status: administratively down
+	protocol_status: down (disabled)
+	native_vlan: 1
+	ctps: [
+		{
+		name: GigabitEthernet0/3
+		ip_address: 
+		mac_address: 0c9d.5f11.d803
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sw1
+	name: Vlan10
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Vlan10
+		ip_address: 10.11.200.9/27
+		mac_address: 0c9d.5f11.800a
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sw1
+	name: Vlan20
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Vlan20
+		ip_address: 10.11.200.39/27
+		mac_address: 0c9d.5f11.8014
+		access_vlan: 1
+		}
+		]
+	}
+	]
+}
+sw2:{
+	hostname: sw2.pni.nist.gov
+	chassis_id: 0c9d.5f61.5b00
+	management_ip: 10.11.200.139
+	device_type: Switch
+	ltps: [
+	{
+	node: sw2
+	name: GigabitEthernet0/0
+	link_status: up
+	protocol_status: up (connected)
+	native_vlan: 1
+	ctps: [
+		{
+		name: GigabitEthernet0/0
+		ip_address: 
+		mac_address: 0c9d.5f61.5b00
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sw2
+	name: GigabitEthernet0/1
+	link_status: up
+	protocol_status: up (connected)
+	native_vlan: 1
+	ctps: [
+		{
+		name: GigabitEthernet0/1
+		ip_address: 
+		mac_address: 0c9d.5f61.5b01
+		access_vlan: unassigned
+		}
+		]
+	}
+	{
+	node: sw2
+	name: GigabitEthernet0/2
+	link_status: up
+	protocol_status: up (connected)
+	native_vlan: 1
+	ctps: [
+		{
+		name: GigabitEthernet0/2
+		ip_address: 
+		mac_address: 0c9d.5f61.5b02
+		access_vlan: unassigned
+		}
+		]
+	}
+	{
+	node: sw2
+	name: GigabitEthernet0/3
+	link_status: down
+	protocol_status: down (notconnect)
+	native_vlan: 1
+	ctps: [
+		{
+		name: GigabitEthernet0/3
+		ip_address: 
+		mac_address: 0c9d.5f61.5b03
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sw2
+	name: Vlan30
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Vlan30
+		ip_address: 10.11.200.139/27
+		mac_address: 0c9d.5f61.801e
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sw2
+	name: Vlan40
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Vlan40
+		ip_address: 10.11.200.169/27
+		mac_address: 0c9d.5f61.8028
+		access_vlan: 1
+		}
+		]
+	}
+	]
+}
+sh1:{
+	hostname: SH1.pni.nist.gov
+	chassis_id: aabb.cc00.0200
+	management_ip: 10.11.200.198
+	device_type: Router
+	ltps: [
+	{
+	node: sh1
+	name: Ethernet0/0
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet0/0
+		ip_address: 
+		mac_address: aabb.cc00.0200
+		access_vlan: 1
+		}
+		{
+		name: Ethernet0/0.10
+		ip_address: 10.11.200.1/27
+		mac_address: aabb.cc00.0200
+		access_vlan: 1
+		}
+		{
+		name: Ethernet0/0.20
+		ip_address: 10.11.200.33/27
+		mac_address: aabb.cc00.0200
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh1
+	name: Ethernet0/1
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet0/1
+		ip_address: 10.11.200.209/30
+		mac_address: aabb.cc00.0210
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh1
+	name: Ethernet0/2
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet0/2
+		ip_address: 10.11.200.198/30
+		mac_address: aabb.cc00.0220
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh1
+	name: Ethernet0/3
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet0/3
+		ip_address: 10.11.200.202/30
+		mac_address: aabb.cc00.0230
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh1
+	name: Ethernet1/0
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet1/0
+		ip_address: 
+		mac_address: aabb.cc00.0201
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh1
+	name: Ethernet1/1
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet1/1
+		ip_address: 
+		mac_address: aabb.cc00.0211
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh1
+	name: Ethernet1/2
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet1/2
+		ip_address: 
+		mac_address: aabb.cc00.0221
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh1
+	name: Ethernet1/3
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Ethernet1/3
+		ip_address: 
+		mac_address: aabb.cc00.0231
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh1
+	name: Serial2/0
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial2/0
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh1
+	name: Serial2/1
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial2/1
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh1
+	name: Serial2/2
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial2/2
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh1
+	name: Serial2/3
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial2/3
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh1
+	name: Serial3/0
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial3/0
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh1
+	name: Serial3/1
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial3/1
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh1
+	name: Serial3/2
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial3/2
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh1
+	name: Serial3/3
+	link_status: administratively down
+	protocol_status: down
+	native_vlan: 1
+	ctps: [
+		{
+		name: Serial3/3
+		ip_address: 
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sh1
+	name: Loopback0
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Loopback0
+		ip_address: 1.1.1.1/32
+		mac_address: 
+		access_vlan: 1
+		}
+		]
+	}
+	]
+}
+sw3:{
+	hostname: sw3.pni.nist.gov
+	chassis_id: 0c9d.5f9b.5500
+	management_ip: 10.11.200.69
+	device_type: Switch
+	ltps: [
+	{
+	node: sw3
+	name: GigabitEthernet0/0
+	link_status: up
+	protocol_status: up (connected)
+	native_vlan: 1
+	ctps: [
+		{
+		name: GigabitEthernet0/0
+		ip_address: 
+		mac_address: 0c9d.5f9b.5500
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sw3
+	name: GigabitEthernet0/1
+	link_status: up
+	protocol_status: up (connected)
+	native_vlan: 1
+	ctps: [
+		{
+		name: GigabitEthernet0/1
+		ip_address: 
+		mac_address: 0c9d.5f9b.5501
+		access_vlan: unassigned
+		}
+		]
+	}
+	{
+	node: sw3
+	name: GigabitEthernet0/2
+	link_status: up
+	protocol_status: up (connected)
+	native_vlan: 1
+	ctps: [
+		{
+		name: GigabitEthernet0/2
+		ip_address: 
+		mac_address: 0c9d.5f9b.5502
+		access_vlan: unassigned
+		}
+		]
+	}
+	{
+	node: sw3
+	name: GigabitEthernet0/3
+	link_status: down
+	protocol_status: down (notconnect)
+	native_vlan: 1
+	ctps: [
+		{
+		name: GigabitEthernet0/3
+		ip_address: 
+		mac_address: 0c9d.5f9b.5503
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sw3
+	name: Vlan50
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Vlan50
+		ip_address: 10.11.200.69/27
+		mac_address: 0c9d.5f9b.8032
+		access_vlan: 1
+		}
+		]
+	}
+	{
+	node: sw3
+	name: Vlan60
+	link_status: up
+	protocol_status: up
+	native_vlan: 1
+	ctps: [
+		{
+		name: Vlan60
+		ip_address: 10.11.200.99/27
+		mac_address: 0c9d.5f9b.803c
+		access_vlan: 1
+		}
+		]
+	}
+	]
+}
