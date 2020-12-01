@@ -52,8 +52,8 @@ class Ltp:
         result += "name: "+self.name +"\n\t"
         result += "link_status: "+self.link_status +"\n\t"
         result += "protocol_status: "+self.protocol_status +"\n\t"
-        result += "ctps: ["+ self.ctps_to_string()+"]\n\t"
         result += "native_vlan: "+self.native_vlan +"\n\t"
+        result += "ctps: [\n\t\t"+ self.ctps_to_string()+"]\n\t"
         result += "}\n\t"
         return result
 

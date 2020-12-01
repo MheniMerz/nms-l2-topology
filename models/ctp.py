@@ -10,12 +10,12 @@ class Ctp:
         self.node_id = node_id
 
     def to_string(self) -> str:
-        result = "{\n\t"
-        result += "name: "+self.name+"\n\t"
-        result += "ip_address: "+self.ip_address+"\n\t"
-        result += "mac_address: "+self.mac_address+"\n\t"
-        result += "access_vlan: "+self.vlan_id+"\n\t"
-        result += "}\n\t"
+        result = "{\n\t\t"
+        result += "name: "+self.name+"\n\t\t"
+        result += "ip_address: "+self.ip_address+"\n\t\t"
+        result += "mac_address: "+self.mac_address+"\n\t\t"
+        result += "access_vlan: "+self.vlan_id+"\n\t\t"
+        result += "}\n\t\t"
         return result
 
     def assign_access_vlan(self, vlan:str):
