@@ -93,15 +93,14 @@ def get_ltps():
             return_value = future.result()
         ints = json.loads(return_value, object_hook=lambda d: SimpleNamespace(**d))
         for i in ints:
-            nodes[device].add_ltp(Ltp(
+            if str.split(i.interface,".")[0] not in nodes[device].ltps:
+                nodes[device].add_ltp(Ltp(
                 i.interface,
                 i.link_status,
                 i.protocol_status,
-                #i.ip_address,
-                #i.address,
                 device
                 ))
-            nodes[device].ltps[i.interface].add_ctp(Ctp(
+            nodes[device].ltps[str.split(i.interface,".")[0]].add_ctp(Ctp(
                 i.interface,
                 i.address,
                 i.ip_address,
@@ -126,8 +125,8 @@ def set_vlan_for_ltp(device):
             return_value = future.result()
             ports= json.loads(return_value, object_hook=lambda d: SimpleNamespace(**d))
             for p in ports:
-                tmp = models.ltp.normalize_ltp(p.interface)
-                nodes[dev_name].ltps[tmp].ctps[tmp].assign_access_vlan(p.access_vlan)
+                tmp = Ltp.normalize_ltp(p.interface)
+                nodes[dev_name].ltps[str.split(tmp,".")[0]].ctps[tmp].assign_access_vlan(p.access_vlan)
                 nodes[dev_name].ltps[tmp].assign_native_vlan(p.native_vlan)
 
 # open config file

@@ -1,34 +1,17 @@
 import json
 
-def lldp_capability_to_device_type(cap: str) -> str:
-    result = "Unkown"
-    switcher = {
-            "R":"Router",
-            "B":"Bridge",
-            "T":"Telephone",
-            "C":"DOCSIS Cable Device",
-            "W":"WLAN Access Point",
-            "P":"Repeater",
-            "S":"Station",
-            "O":"Other",
-            "" :"Switch"
-            }
-    result  = switcher[cap]
-    return result
-    
-
 class Node:
-    def __init__(self, name: str, chassis_id: str, mgmt_ip: str, capability: str):
+    def __init__(self, name: str, hwaddr: str, mgmt_ip: str, capability: str):
         self.name = name
-        self.chassis_id = chassis_id
+        self.hwaddr = hwaddr
         self.mgmt_ip = mgmt_ip
-        self.node_type = lldp_capability_to_device_type(capability)
+        self.node_type = self.lldp_capability_to_device_type(capability)
         self.ltps: dict [str, "Ltp"] = {}
 
     def to_string(self) -> str:
         result  = "{\n\t"
         result += "hostname: "+self.name +"\n\t"
-        result += "chassis_id: "+self.chassis_id +"\n\t"
+        result += "hwaddr: "+self.hwaddr +"\n\t"
         result += "management_ip: "+self.mgmt_ip +"\n\t"
         result += "device_type: "+ self.node_type +"\n\t"
         result += "ltps: [\n\t"+self.ltps_to_string()+"]"
@@ -56,4 +39,22 @@ class Node:
 
     def name_from_fqdn(self) -> str:
         return self.name.split(".")[0]
+
+    @staticmethod
+    def lldp_capability_to_device_type(cap: str) -> str:
+        result = "Unkown"
+        switcher = {
+                "R":"Router",
+                "B":"Bridge",
+                "T":"Telephone",
+                "C":"DOCSIS Cable Device",
+                "W":"WLAN Access Point",
+                "P":"Repeater",
+                "S":"Station",
+                "O":"Other",
+                "" :"Switch"
+                }
+        result  = switcher[cap]
+        return result
+
 

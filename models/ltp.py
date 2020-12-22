@@ -1,49 +1,33 @@
 import json
 import re 
 
-LTP_NAME_RE = re.compile(
-     r"(?P<ltp_type>[a-zA-Z\-_ ]*)(?P<ltp_num>[\d.\/]*)"
- )
- 
-NORMALIZED_LTPS = (
-     "FastEthernet",
-     "GigabitEthernet",
-     "TenGigabitEthernet",
-     "FortyGigabitEthernet",
-     "Ethernet",
-     "Loopback",
-     "Serial",
-     "Vlan",
-     "Tunnel",
-     "Portchannel",
-     "Management",
-)
-
-def normalize_ltp(name: str) -> str:
-    match = LTP_NAME_RE.search(name)
-    if match:
-        ltp_type = match.group("ltp_type")
-        normalized_ltp_type = normalize_ltp_type(ltp_type)
-        ltp_num = match.group("ltp_num")
-        return normalized_ltp_type+ltp_num
-    raise ValueError(f"Does not recognize {name} as an ltp name")
-
-def normalize_ltp_type(ltp_type: str) -> str:
-    ltp_type = ltp_type.strip().lower()
-    for norm_ltp_type in NORMALIZED_LTPS:
-        if norm_ltp_type.lower().startswith(ltp_type):
-            return norm_ltp_type
-    return ltp_type
 
 class Ltp:
 
+    LTP_NAME_RE = re.compile(
+         r"(?P<ltp_type>[a-zA-Z\-_ ]*)(?P<ltp_num>[\d.\/]*)"
+     )
+     
+    NORMALIZED_LTPS = (
+         "FastEthernet",
+         "GigabitEthernet",
+         "TenGigabitEthernet",
+         "FortyGigabitEthernet",
+         "Ethernet",
+         "Loopback",
+         "Serial",
+         "Vlan",
+         "Tunnel",
+         "Portchannel",
+         "Management",
+    )
+    
     def __init__(self, name: str, l_status: str, p_status: str, node_id: str):
-        self.name = normalize_ltp(name)
+        self.name = self.normalize_ltp(name)
         self.link_status = l_status
         self.protocol_status = p_status
         self.native_vlan = "1"
         self.node = node_id
-
         self.ctps: dict [str, "Ctp"] = {}
 
     def to_string(self) -> str:
@@ -68,3 +52,22 @@ class Ltp:
         for k in self.ctps:
             result +=self.ctps[k].to_string()
         return result
+    
+    @staticmethod
+    def normalize_ltp(name: str) -> str:
+        match = Ltp.LTP_NAME_RE.search(name)
+        if match:
+            ltp_type = match.group("ltp_type")
+            normalized_ltp_type = Ltp.normalize_ltp_type(ltp_type)
+            ltp_num = match.group("ltp_num")
+            return normalized_ltp_type+ltp_num
+        raise ValueError(f"Does not recognize {name} as an ltp name")
+    
+    @staticmethod 
+    def normalize_ltp_type(ltp_type: str) -> str:
+        ltp_type = ltp_type.strip().lower()
+        for norm_ltp_type in Ltp.NORMALIZED_LTPS:
+            if norm_ltp_type.lower().startswith(ltp_type):
+                return norm_ltp_type
+        return ltp_type
+    
