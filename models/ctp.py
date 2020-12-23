@@ -1,9 +1,10 @@
 import json
 
 class Ctp:
-    def __init__(self, name, mac, ip, vlan_id, ltp_id, node_id):
+    def __init__(self, name, mac, p_status, ip, vlan_id, ltp_id, node_id):
         self.name = name
         self.mac_address = mac
+        self.status = p_status
         self.ip_address = ip
         self.vlan_id = vlan_id
         self.ltp_id = ltp_id
@@ -14,6 +15,7 @@ class Ctp:
         result += "name: "+self.name+"\n\t\t"
         result += "ip_address: "+self.ip_address+"\n\t\t"
         result += "mac_address: "+self.mac_address+"\n\t\t"
+        result += "status: "+self.status+"\n\t\t"
         result += "access_vlan: "+self.vlan_id+"\n\t\t"
         result += "}\n\t\t"
         return result

@@ -22,11 +22,12 @@ class Ltp:
          "Management",
     )
     
-    def __init__(self, name: str, l_status: str, p_status: str, node_id: str):
+    def __init__(self, name: str, l_status: str, bandwidth: str, mtu: str, node_id: str):
         self.name = self.normalize_ltp(name)
-        self.link_status = l_status
-        self.protocol_status = p_status
+        self.status = l_status
         self.native_vlan = "1"
+        self.bandwidth = bandwidth
+        self.mtu = mtu
         self.node = node_id
         self.ctps: dict [str, "Ctp"] = {}
 
@@ -34,9 +35,10 @@ class Ltp:
         result = "{\n\t"
         result += "node: "+self.node+"\n\t"
         result += "name: "+self.name +"\n\t"
-        result += "link_status: "+self.link_status +"\n\t"
-        result += "protocol_status: "+self.protocol_status +"\n\t"
+        result += "status: "+self.status +"\n\t"
         result += "native_vlan: "+self.native_vlan +"\n\t"
+        result += "bandwidth: "+self.bandwidth+"\n\t"
+        result += "mtu: "+self.mtu +"\n\t"
         result += "ctps: [\n\t\t"+ self.ctps_to_string()+"]\n\t"
         result += "}\n\t"
         return result

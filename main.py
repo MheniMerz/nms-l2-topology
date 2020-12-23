@@ -73,10 +73,10 @@ def get_nodes():
                         i.management_ip, 
                         i.capabilities)
             if i.local_interface != "" and i.neighbor_interface != "":
-                links[device+"<->"+nb]= Link(
-                        [Ltp(i.local_interface,"","",device),
-                        Ltp(i.neighbor_interface,"","",nb)]
-                        )                
+                links[device+"<->"+nb]= Link([
+                    Ltp(i.local_interface,"","","",device),
+                    Ltp(i.neighbor_interface,"","","",nb)
+                    ])                
 
 def get_ltps():
     threads = list()
@@ -92,17 +92,20 @@ def get_ltps():
                     )
             return_value = future.result()
         ints = json.loads(return_value, object_hook=lambda d: SimpleNamespace(**d))
+#        print(ints)
         for i in ints:
             if str.split(i.interface,".")[0] not in nodes[device].ltps:
                 nodes[device].add_ltp(Ltp(
                 i.interface,
                 i.link_status,
-                i.protocol_status,
+                i.bandwidth,
+                i.mtu,
                 device
                 ))
             nodes[device].ltps[str.split(i.interface,".")[0]].add_ctp(Ctp(
                 i.interface,
                 i.address,
+                i.protocol_status,
                 i.ip_address,
                 "1",
                 i.interface,
