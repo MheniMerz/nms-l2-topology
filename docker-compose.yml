@@ -7,3 +7,6 @@ services:
                         - .:/usr/src/app
                 ports:
                         - 6556:8080
+                environment:
+                        env_file: ~/env_vars.env
+

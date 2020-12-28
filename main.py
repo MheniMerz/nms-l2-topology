@@ -1,3 +1,6 @@
+import os
+import time 
+import logging
 import netmiko
 import configparser
 import json
@@ -92,7 +95,6 @@ def get_ltps():
                     )
             return_value = future.result()
         ints = json.loads(return_value, object_hook=lambda d: SimpleNamespace(**d))
-#        print(ints)
         for i in ints:
             if str.split(i.interface,".")[0] not in nodes[device].ltps:
                 nodes[device].add_ltp(Ltp(
@@ -132,11 +134,25 @@ def set_vlan_for_ltp(device):
                 nodes[dev_name].ltps[str.split(tmp,".")[0]].ctps[tmp].assign_access_vlan(p.access_vlan)
                 nodes[dev_name].ltps[tmp].assign_native_vlan(p.native_vlan)
 
-# open config file
-config = configparser.ConfigParser()
-config.read('config.ini')
-config.sections()
 
+#set env variables
+repeat_timer = os.environ.get('REPEAT_TIMER') 
+conf_file = os.environ.get('CONF_FILE') 
+
+#create logger
+log = logging.getLogger()
+# make it print to the console.
+console = logging.StreamHandler()
+log.addHandler(console)
+
+# open config file
+try:
+    config = configparser.ConfigParser()
+    config.read(str(conf_file))
+    config.sections()
+except IOError:
+    log.critical("*********** ERROR reading config file **********")
+    exit(1)
 
 # global variables that hold the results
 nodes = {}
@@ -145,17 +161,26 @@ links = {}
 
 # check config file for mandatory sections
 if 'TARGETS' not in config or 'AUTH' not in config:
-    log('Syntax error in configuration file. Please provide AUTH and TARGETS')
-    log('ERROR: failed to load the configuration file')
-    log('Exiting')
+    log.critical('Syntax error in configuration file. Please provide AUTH and TARGETS')
+    log.critical('ERROR: failed to load the configuration file')
+    log.critical('Exiting')
     exit(1)
 
-get_nodes()
-get_ltps()
-
+if(repeat_timer == None):
+    get_nodes()
+    get_ltps()
+    for n in nodes:
+        print(n +":"+nodes[n].to_string())
+else:
+    while(True):
+        get_nodes()
+        get_ltps()
+        for n in nodes:
+            print(n +":"+nodes[n].to_string())
+        time.sleep(int(repeat_timer))
 #for l in links:
 #    print(l +":"+links[l].to_string())
 
-for n in nodes:
-    print(n +":"+nodes[n].to_string())
+#for n in nodes:
+#    print(n +":"+nodes[n].to_string())
 
