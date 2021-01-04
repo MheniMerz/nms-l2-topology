@@ -32,7 +32,8 @@ def run_cmd(ip, dev_type, username, password, command):
         print("***** AUTHENTICATION ERROR when connecting to "+ip+" *****")
         return
     except (SSHException):
-        print("***** SSH ERROR when connecting to "+ip+" *****")  
+        print("***** SSH ERROR when connecting to "+ip+" *****")
+#        print(SSHException)
         return
     except (NetMikoTimeoutException):
         print("***** TIMEOUT ERROR when connecting to "+ip+" *****") 
@@ -46,7 +47,7 @@ def run_cmd(ip, dev_type, username, password, command):
             command = command,
             data = result
             )
-    # beutify the json file and print
+    # beutify the json file 
     parsed_result = json.dumps(parsed_result, indent=2)
     connection.disconnect()
     return parsed_result 
@@ -66,7 +67,7 @@ def get_nodes():
                     "show lldp neighbors detail"
             )
             return_value = future.result()
-        neighbors = json.loads(return_value, object_hook=lambda d: SimpleNamespace(**d))
+            neighbors = json.loads(return_value, object_hook=lambda d: SimpleNamespace(**d))
         for i in neighbors:
             nb = i.neighbor.split(".")[0].lower() 
             if nb not in nodes:
@@ -137,8 +138,7 @@ def set_vlan_for_ltp(device):
 
 #set env variables
 repeat_timer = os.environ.get('REPEAT_TIMER') 
-conf_file = os.environ.get('CONF_FILE') 
-
+conf_file = os.environ.get('CONF_FILE')
 #create logger
 log = logging.getLogger()
 # make it print to the console.
@@ -148,7 +148,7 @@ log.addHandler(console)
 # open config file
 try:
     config = configparser.ConfigParser()
-    config.read(str(conf_file))
+    config.read(conf_file)
     config.sections()
 except IOError:
     log.critical("*********** ERROR reading config file **********")
