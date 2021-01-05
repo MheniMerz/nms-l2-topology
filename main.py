@@ -31,9 +31,9 @@ def run_cmd(ip, dev_type, username, password, command):
     except (AuthenticationException):
         print("***** AUTHENTICATION ERROR when connecting to "+ip+" *****")
         return
-    except (SSHException):
+    except (SSHException, err):
         print("***** SSH ERROR when connecting to "+ip+" *****")
-#        print(SSHException)
+        print(SSHException)
         return
     except (NetMikoTimeoutException):
         print("***** TIMEOUT ERROR when connecting to "+ip+" *****") 
