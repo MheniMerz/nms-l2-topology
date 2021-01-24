@@ -1,13 +1,23 @@
+'''
+LTP Object Description:
+    {
+      "name": "string",
+      "label": "string",
+      "description": "string",
+      "info": {},
+      "vnodeId": 0,
+      "busy": true,
+      "port": "string"
+    }
+'''
+
 import json
 import re 
-
+from models.common_fields import CommonFields
 
 class Ltp:
 
-    LTP_NAME_RE = re.compile(
-         r"(?P<ltp_type>[a-zA-Z\-_ ]*)(?P<ltp_num>[\d.\/]*)"
-     )
-     
+    LTP_NAME_RE = re.compile(r"(?P<ltp_type>[a-zA-Z\-_ ]*)(?P<ltp_num>[\d.\/]*)")
     NORMALIZED_LTPS = (
          "FastEthernet",
          "GigabitEthernet",
@@ -22,21 +32,21 @@ class Ltp:
          "Management",
     )
     
-    def __init__(self, name: str, l_status: str, bandwidth: str, mtu: str, node_id: str):
-        self.name = self.normalize_ltp(name)
-        self.status = l_status
-        self.native_vlan = "1"
+    def __init__(self, name: str, l_status: str, bandwidth: str, mtu: str, node_id: str, mac_address: str, desc=""):
+        self.cf = CommonFields(name, name, 0, desc)
+        self.node_id = node_id
+        self.busy = l_status
+        self.port = mac_address
         self.bandwidth = bandwidth
         self.mtu = mtu
-        self.node = node_id
         self.ctps: dict [str, "Ctp"] = {}
 
     def to_string(self) -> str:
         result = "{\n\t"
-        result += "node: "+self.node+"\n\t"
-        result += "name: "+self.name +"\n\t"
-        result += "status: "+self.status +"\n\t"
-        result += "native_vlan: "+self.native_vlan +"\n\t"
+        result += self.cf.to_string()
+        result += "node_id: "+self.node_id+"\n\t"
+        result += "status: "+self.busy +"\n\t"
+        result += "port: "+self.port +"\n\t"
         result += "bandwidth: "+self.bandwidth+"\n\t"
         result += "mtu: "+self.mtu +"\n\t"
         result += "ctps: [\n\t\t"+ self.ctps_to_string()+"]\n\t"
@@ -44,7 +54,7 @@ class Ltp:
         return result
 
     def add_ctp(self, ctp:"Ctp") -> None:
-        self.ctps[ctp.name] = ctp
+        self.ctps[ctp.cf.name] = ctp
 
     def assign_native_vlan(self, vlan:str):
         self.native_vlan = vlan

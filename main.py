@@ -11,6 +11,9 @@ from netmiko.ssh_exception import  AuthenticationException
 from types import SimpleNamespace
 from ntc_templates.parse import parse_output
 
+from api.node_api import nodeApi
+from api.ltp_api import ltpApi
+from api.link_api import linkApi
 import models.ltp
 from models.node import Node
 from models.ltp import Ltp
@@ -31,9 +34,8 @@ def run_cmd(ip, dev_type, username, password, command):
     except (AuthenticationException):
         print("***** AUTHENTICATION ERROR when connecting to "+ip+" *****")
         return
-    except (SSHException, err):
+    except (SSHException):
         print("***** SSH ERROR when connecting to "+ip+" *****")
-        print(SSHException)
         return
     except (NetMikoTimeoutException):
         print("***** TIMEOUT ERROR when connecting to "+ip+" *****") 
@@ -72,15 +74,17 @@ def get_nodes():
             nb = i.neighbor.split(".")[0].lower() 
             if nb not in nodes:
                 nodes[nb] = Node(
-                        i.neighbor, 
-                        i.chassis_id, 
+                        i.neighbor,
+                        i.neighbor,
+                        i.chassis_id,
+                        "NIST B222/B215, Gaithersubrg MD",
                         i.management_ip, 
                         i.capabilities)
             if i.local_interface != "" and i.neighbor_interface != "":
-                links[device+"<->"+nb]= Link([
-                    Ltp(i.local_interface,"","","",device),
-                    Ltp(i.neighbor_interface,"","","",nb)
-                    ])                
+                links[device+"<->"+nb]= Link(
+                    Ltp(i.local_interface,"","","",device,""),
+                    Ltp(i.neighbor_interface,"","","",nb,"")
+                    )                
 
 def get_ltps():
     threads = list()
@@ -103,8 +107,10 @@ def get_ltps():
                 i.link_status,
                 i.bandwidth,
                 i.mtu,
-                device
-                ))
+                device,
+                i.address,
+                i.description
+            ))
             nodes[device].ltps[str.split(i.interface,".")[0]].add_ctp(Ctp(
                 i.interface,
                 i.address,
@@ -113,7 +119,7 @@ def get_ltps():
                 "1",
                 i.interface,
                 device
-                ))
+            ))
         set_vlan_for_ltp(nodes[device])
 
 def set_vlan_for_ltp(device):
@@ -170,17 +176,18 @@ if(repeat_timer == None):
     get_nodes()
     get_ltps()
     for n in nodes:
-        print(n +":"+nodes[n].to_string())
+        nodeApi.post_node(nodes[n])
+        for i in nodes[n].ltps.values():
+            ltpApi.post_ltp(i)
 else:
     while(True):
         get_nodes()
         get_ltps()
         for n in nodes:
-            print(n +":"+nodes[n].to_string())
+            nodeApi.post_node(nodes[n])
+            for i in nodes[n].ltps.values():
+                ltpApi.post_ltp(i)
+        for l in links:
+            linkApi.post_link(links[l])
         time.sleep(int(repeat_timer))
-#for l in links:
-#    print(l +":"+links[l].to_string())
-
-#for n in nodes:
-#    print(n +":"+nodes[n].to_string())
 

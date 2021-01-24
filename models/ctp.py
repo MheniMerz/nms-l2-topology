@@ -1,8 +1,30 @@
+'''
+Ctp object:
+    {
+      common_fields {
+        "id": 0,
+        "name": "string",
+        "label": "string",
+        "description": "string",
+        "info": {},
+      }
+      "parentId": 0,
+      "connType": "Ether",
+      "connInfo": {
+        "address": "string",
+        "vlan": {
+          "vlanId": 0,
+          "isNative": true
+        }
+      }
+    }
+'''
 import json
+from models.common_fields import CommonFields 
 
 class Ctp:
     def __init__(self, name, mac, p_status, ip, vlan_id, ltp_id, node_id):
-        self.name = name
+        self.cf = CommonFields(name, name)
         self.mac_address = mac
         self.status = p_status
         self.ip_address = ip
@@ -12,7 +34,7 @@ class Ctp:
 
     def to_string(self) -> str:
         result = "{\n\t\t"
-        result += "name: "+self.name+"\n\t\t"
+        result += self.cf.to_string()
         result += "ip_address: "+self.ip_address+"\n\t\t"
         result += "mac_address: "+self.mac_address+"\n\t\t"
         result += "status: "+self.status+"\n\t\t"
