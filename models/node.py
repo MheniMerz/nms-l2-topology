@@ -21,13 +21,13 @@ import json
 from models.common_fields import CommonFields
 
 class Node:
-    def __init__(self, name: str, label:str, hwaddr: str, location:str,  mgmt_ip: str, capability: str, status="UP", subnet_id=0, description=""):
+    def __init__(self, name: str, label:str, hwaddr: str, location:str,  mgmt_ip: str, capability: str, subnet_id=1, status="UP", description=""):
         self.cf = CommonFields(name,label,0,description)
         self.hwaddr = hwaddr
         self.location = location
         self.mgmt_ip = mgmt_ip
         self.node_type = self.lldp_capability_to_device_type(capability)
-        self.status = status
+        self.status = status.upper()
         self.subnet_id=subnet_id
         self.ltps: dict [str, "Ltp"] = {}
 
@@ -70,15 +70,15 @@ class Node:
     def lldp_capability_to_device_type(cap: str) -> str:
         result = "Unkown"
         switcher = {
-                "R":"Router",
-                "B":"Bridge",
-                "T":"Telephone",
-                "C":"DOCSIS Cable Device",
-                "W":"WLAN Access Point",
-                "P":"Repeater",
-                "S":"Station",
-                "O":"Other",
-                "" :"Switch"
+                "R":"ipRouter",
+                "B":"ipBridge",
+                "T":"ipTelephone",
+                "C":"ipDOCSIS Cable Device",
+                "W":"ipWLAN Access Point",
+                "P":"ipRepeater",
+                "S":"ipStation",
+                "O":"ipOther",
+                "" :"ipSwitch"
                 }
         result  = switcher[cap]
         return result

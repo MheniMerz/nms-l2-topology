@@ -13,63 +13,24 @@ from ntc_templates.parse import parse_output
 from api.node_api import nodeApi
 from api.ltp_api import ltpApi
 from api.link_api import linkApi
-from api.ctp_api import ctpApi
-from api.subnet_api import subnetApi
-from api.auth_api import authApi
 from models.node import Node
 from models.ltp import Ltp
 from models.ctp import Ctp
 from models.link import Link
-from models.auth import Auth
-from models.subnet import Subnet
-
-def run_cmd(ip, dev_type, username, password, command):
-    try:
-        # create connection
-        connection = netmiko.ConnectHandler(
-                ip=ip,
-                device_type=dev_type,
-                username=username,
-                password=password,
-        )
-        # run the first command to get the ltps on the current node
-        result = connection.send_command(command)
-    except (AuthenticationException):
-        print("***** AUTHENTICATION ERROR when connecting to "+ip+" *****")
-        return
-    except (SSHException):
-        print("***** SSH ERROR when connecting to "+ip+" *****")
-        return
-    except (NetMikoTimeoutException):
-        print("***** TIMEOUT ERROR when connecting to "+ip+" *****") 
-        return
-    except :
-        print("***** UNKONWN ERROR when connecting to "+ip+" *****")
-        return
-    # use ntc_templates to parse the output into json
-    parsed_result = parse_output(
-            platform = dev_type,
-            command = command,
-            data = result
-            )
-    # beutify the json file 
-    parsed_result = json.dumps(parsed_result, indent=2)
-    connection.disconnect()
-    return parsed_result 
+from queries.node_query import nodeQuery
+from queries.ltp_query import ltpQuery
 
 
 def get_nodes():
-    return_value = ""
     threads = list()
     for device in json.loads(config['TARGETS']['devices']):
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future = executor.submit(
-                    run_cmd,
+                    nodeQuery.get_lldp_neighbors,
                     device,
                     "cisco_ios",
                     config['AUTH']['username'],
-                    config['AUTH']['password'],
-                    "show lldp neighbors detail"
+                    config['AUTH']['password']
             )
             return_value = future.result()
             neighbors = json.loads(return_value, object_hook=lambda d: SimpleNamespace(**d))
@@ -82,8 +43,7 @@ def get_nodes():
                         i.chassis_id,
                         "NIST B222/B215, Gaithersubrg MD",
                         i.management_ip, 
-                        i.capabilities,
-                        subnetObj.cf.cf_id)
+                        i.capabilities)
             if i.local_interface != "" and i.neighbor_interface != "":
                 links[device+"<->"+nb]= Link(
                     Ltp(i.local_interface,"","","",device,""),
@@ -95,12 +55,11 @@ def get_ltps():
     for device in json.loads(config['TARGETS']['devices']):
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future = executor.submit(
-                    run_cmd,
+                    ltpQuery.get_ltps,
                     device,
                     "cisco_ios",
                     config['AUTH']['username'],
-                    config['AUTH']['password'],
-                    "show interface"
+                    config['AUTH']['password']
                     )
             return_value = future.result()
         ints = json.loads(return_value, object_hook=lambda d: SimpleNamespace(**d))
@@ -111,20 +70,19 @@ def get_ltps():
                 i.link_status,
                 i.bandwidth,
                 i.mtu,
-                nodes[device].cf.cf_id,
+                device,
                 i.address,
                 i.description
-                ))
-                nodes[device].ltps[str.split(i.interface,".")[0]].add_ctp(Ctp(
-                    i.interface,
-                    nodes[device].ltps[str.split(i.interface,".")[0]].cf.cf_id,
-                    i.encapsulation,
-                    i.address,
-                    i.protocol_status,
-                    1,
-                    1,
-                    i.ip_address
-                ))
+            ))
+            nodes[device].ltps[str.split(i.interface,".")[0]].add_ctp(Ctp(
+                i.interface,
+                i.address,
+                i.protocol_status,
+                i.ip_address,
+                "1",
+                nodes[device].ltps[str.split(i.interface,".")[0]].cf.cf_id,
+                device
+            ))
         set_vlan_for_ltp(nodes[device])
 
 def set_vlan_for_ltp(device):
@@ -132,12 +90,11 @@ def set_vlan_for_ltp(device):
         dev_name = device.name_from_fqdn()
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future = executor.submit(
-                    run_cmd,
+                    ltpQuery.set_vlan_for_ltp,
                     dev_name,
                     "cisco_ios",
                     config['AUTH']['username'],
-                    config['AUTH']['password'],
-                    "show interfaces switchport"
+                    config['AUTH']['password']
                     )
             return_value = future.result()
             ports= json.loads(return_value, object_hook=lambda d: SimpleNamespace(**d))
@@ -168,6 +125,7 @@ except IOError:
 # global variables that hold the results
 nodes = {}
 links = {}
+#graph = Graph(nodes, links)
 
 # check config file for mandatory sections
 if 'TARGETS' not in config or 'AUTH' not in config:
@@ -176,30 +134,22 @@ if 'TARGETS' not in config or 'AUTH' not in config:
     log.critical('Exiting')
     exit(1)
 
-authObj = Auth()
-authObj.token = authApi.login(Auth())
-print(authObj.token)
-subnetObj = Subnet("test_subnet")
-subnetObj.cf.cf_id = subnetApi.post_subnet(subnetObj, authObj)
 if(repeat_timer == None):
     get_nodes()
     get_ltps()
     for n in nodes:
-        nodeApi.post_node(nodes[n],authObj)
+        nodeApi.post_node(nodes[n])
         for i in nodes[n].ltps.values():
-            ltpApi.post_ltp(i, authObj)
+            ltpApi.post_ltp(i)
 else:
     while(True):
         get_nodes()
-        for n in nodes:
-            nodes[n].cf.cf_id = nodeApi.post_node(nodes[n], authObj)
         get_ltps()
         for n in nodes:
-            for l in nodes[n].ltps.values():
-                l.cf.cf_id = ltpApi.post_ltp(l, authObj)
-#                for c in l.ctps.values():
-#                    c.cf.cf_id = ctpApi.post_ctp(c, authObj)
-#        for l in links:
-#            l.cf.cf_id = linkApi.post_link(links[l], authObj)
+            nodeApi.post_node(nodes[n])
+            for i in nodes[n].ltps.values():
+                ltpApi.post_ltp(i)
+        for l in links:
+            linkApi.post_link(links[l])
         time.sleep(int(repeat_timer))
 

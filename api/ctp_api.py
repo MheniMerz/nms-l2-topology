@@ -1,18 +1,28 @@
 import requests
+import os
+import json
+from api.api import apiException
 
-    
-auth_token='mheni'
-head = {'Authorization': 'Bearer ' + auth_token}
-url = 'http://172.17.0.3:8080/api/topology/ctp'
+url = str(os.environ.get('API_SERVER_URL'))+"topology/ctp"
 class ctpApi:
-    def post_ctp(ctp):
+    def post_ctp(ctp, auth):
+        head = {'Authorization': 'Bearer ' + auth.token}
         data = {
                 "name": ctp.cf.name,
                 "label": ctp.cf.label,
                 "description": ctp.cf.description,
                 "info": ctp.cf.info,
-                "vlinkId": 1,
-                "vltpId": 1
+                "parentId": ctp.parentId,
+                "connType": ctp.connType,
+                "connInfo": ctp.connInfo
              }
-        response = requests.post(url, json=data, headers=head)
-        print(response.json())
+        response = requests.post(
+                    url, 
+                    json = data,
+                    headers = head,
+                    verify = os.environ.get('CERT_VERIFY')=='True'
+                    )
+        if not 200<= response.status_code <= 299 : 
+            raise apiException(status=response.status_code, reason=response.reason)
+            return
+        return str.split(response.headers['Location'],'/')[2]

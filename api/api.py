@@ -1,23 +1,50 @@
-import flask
-import main 
+import requests
+import os 
+    
+class apiClient:
+    def __init__(self, url, auth):
+        self.url = url
+        self.auth = auth
+        self.response = ""
 
-app = flask.Flask(__name__)
+    def send_request(self, method):
+        assert method in ['GET', 'HEAD', 'DELETE', 'POST', 
+                            'PUT', 'PATCH', 'OPTIONS']
+        
 
+    def handle_response(self):
+        switcher ={
+                "200" :"" ,
+                "201" :"" ,
+                "401" :"" ,
+                "403" :"" ,
+                "404" :"" ,
+                "500" :"" 
+                }
 
-@app.route('/', methods=['GET'])
-def home():
-    return "<h1>HOME PAGE</h1><p>This site is a prototype API for physical topology discovery</p>"
+class apiException(Exception):
+    def __init__(self, status=None, reason=None, http_resp=None):
+        if http_resp:
+            self.status = http_resp.status
+            self.reason = http_resp.reason
+            self.body = http_resp.data
+            self.headers = http_resp.getheaders()
+        else:
+            self.status = status
+            self.reason = reason
+            self.body = None
+            self.headers = None
 
-@app.route('/nms/nodes', methods=['GET'])
-def graph():
-    return main.get_nodes()
+    def __str__(self):
+        """Custom error messages for exception"""
+        error_message = "({0})\n"\
+                        "Reason: {1}\n".format(self.status, self.reason)
+        if self.headers:
+            error_message += "HTTP response headers: {0}\n".format(
+                self.headers)
 
-@app.route('/nms/links', methods=['GET'])
-def graph():
-    return main.get_links()
+        if self.body:
+            error_message += "HTTP response body: {0}\n".format(self.body)
 
-@app.route('/nms/graph', methods=['GET'])
-def graph():
-    return main.get_graph()
+        return error_message
 
-app.run(host="0.0.0.0", port=6556)

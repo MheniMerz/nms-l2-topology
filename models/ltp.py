@@ -6,7 +6,7 @@ LTP Object Description:
       "description": "string",
       "info": {},
       "vnodeId": 0,
-      "busy": true,
+      "status": true,
       "port": "string"
     }
 '''
@@ -35,7 +35,7 @@ class Ltp:
     def __init__(self, name: str, l_status: str, bandwidth: str, mtu: str, node_id: str, mac_address: str, desc=""):
         self.cf = CommonFields(name, name, 0, desc)
         self.node_id = node_id
-        self.busy = l_status
+        self.status = self.normalize_status(l_status)
         self.port = mac_address
         self.bandwidth = bandwidth
         self.mtu = mtu
@@ -45,13 +45,19 @@ class Ltp:
         result = "{\n\t"
         result += self.cf.to_string()
         result += "node_id: "+self.node_id+"\n\t"
-        result += "status: "+self.busy +"\n\t"
+        result += "status: "+self.status +"\n\t"
         result += "port: "+self.port +"\n\t"
         result += "bandwidth: "+self.bandwidth+"\n\t"
         result += "mtu: "+self.mtu +"\n\t"
         result += "ctps: [\n\t\t"+ self.ctps_to_string()+"]\n\t"
         result += "}\n\t"
         return result
+
+    def normalize_status(self, status):
+        status = status.upper()
+        if "ADMIN" in status:
+            status = "DOWN"
+        return status
 
     def add_ctp(self, ctp:"Ctp") -> None:
         self.ctps[ctp.cf.name] = ctp
