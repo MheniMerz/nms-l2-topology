@@ -16,10 +16,11 @@ class CommonFields:
         self.description = description
         self.info= info
     
-    def to_string(self) -> str:
+    def __str__(self):
         result = "{\n\t"
-        result += "id: "+self.id+"\n\t"   
+        result += "id: "+str(self.cf_id)+"\n\t"   
         result += "name: "+self.name+"\n\t"   
         result += "label: "+self.label+"\n\t"   
         result += "description: "+self.description+"\n\t"
         result += "}\n\t"
+        return result

@@ -1,12 +1,12 @@
 import requests
 import os
 import json
+import logging 
 from api.api import apiException
 
-url = str(os.environ.get('API_SERVER_URL'))+"topology/ctp"
 class ctpApi:
-    def post_ctp(ctp, auth):
-        head = {'Authorization': 'Bearer ' + auth.token}
+    def post_ctp(ctp, api_client):
+        head = {'Authorization': 'Bearer ' + api_client.token}
         data = {
                 "name": ctp.cf.name,
                 "label": ctp.cf.label,
@@ -14,15 +14,16 @@ class ctpApi:
                 "info": ctp.cf.info,
                 "parentId": ctp.parentId,
                 "connType": ctp.connType,
-                "connInfo": ctp.connInfo
+                "connInfo": ctp.connInfo,
+                "status": ctp.status
              }
-        response = requests.post(
-                    url, 
-                    json = data,
-                    headers = head,
-                    verify = os.environ.get('CERT_VERIFY')=='True'
-                    )
-        if not 200<= response.status_code <= 299 : 
-            raise apiException(status=response.status_code, reason=response.reason)
-            return
-        return str.split(response.headers['Location'],'/')[2]
+        #print('post_api: '+str(data))
+        api_client.send_request(url_suffix='topology/ctp', method='POST',
+                                head=head, data=data)
+        if api_client.response.status_code == 201:
+            logging.info(str(api_client.response.status_code)+' CTP created successfully')
+            print(str(api_client.response.status_code)+' CTP created successfully')
+            return str.split(api_client.response.headers['Location'],'/')[2]
+        #logging.warning(str(api_client.response.status_code)+' failed to create CTP')
+        return
+

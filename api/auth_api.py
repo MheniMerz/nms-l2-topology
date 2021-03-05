@@ -1,18 +1,14 @@
 import requests
 import os 
 
-url = str(os.environ.get('API_SERVER_URL'))+'login/user'
-head = {'accept': 'application/json', 'Content-Type': 'application/json'}
 class authApi:
-    def login(auth):
+
+    def login(api_client):
+        head = {'accept': 'application/json', 'Content-Type': 'application/json'}
         data = {
-                "username": auth.username,
-                "password": auth.password
+                "username": api_client.username,
+                "password": api_client.password
              }
-        response = requests.post(
-                    url,
-                    json = data, 
-                    headers = head,
-                    verify = os.environ.get('CERT_VERIFY')=='True'
-                    )
-        return response.text
+        api_client.send_request(url_suffix='login/user', method='POST',
+                                head=head, data=data)
+        api_client.token = api_client.response.text

@@ -56,7 +56,7 @@ class Ltp:
     def normalize_status(self, status):
         status = status.upper()
         if "ADMIN" in status:
-            status = "DOWN"
+            status = "ADMIN_DOWN"
         return status
 
     def add_ctp(self, ctp:"Ctp") -> None:

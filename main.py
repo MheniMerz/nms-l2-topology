@@ -16,6 +16,7 @@ from api.link_api import linkApi
 from api.ctp_api import ctpApi
 from api.subnet_api import subnetApi
 from api.auth_api import authApi
+from api.api import apiClient
 from models.node import Node
 from models.ltp import Ltp
 from models.ctp import Ctp
@@ -74,6 +75,7 @@ def get_nodes():
             return_value = future.result()
             neighbors = json.loads(return_value, object_hook=lambda d: SimpleNamespace(**d))
         for i in neighbors:
+            #print(i)
             nb = i.neighbor.split(".")[0].lower() 
             if nb not in nodes:
                 nodes[nb] = Node(
@@ -85,10 +87,7 @@ def get_nodes():
                         i.capabilities,
                         subnetObj.cf.cf_id)
             if i.local_interface != "" and i.neighbor_interface != "":
-                links[device+"<->"+nb]= Link(
-                    Ltp(i.local_interface,"","","",device,""),
-                    Ltp(i.neighbor_interface,"","","",nb,"")
-                    )                
+                links[device+"<->"+nb]= Link(i.local_interface,i.neighbor_interface)                
 
 def get_ltps():
     threads = list()
@@ -146,60 +145,67 @@ def set_vlan_for_ltp(device):
                 nodes[dev_name].ltps[str.split(tmp,".")[0]].ctps[tmp].assign_access_vlan(p.access_vlan)
                 nodes[dev_name].ltps[tmp].assign_native_vlan(p.native_vlan)
 
-
-#set env variables
-repeat_timer = os.environ.get('REPEAT_TIMER') 
-conf_file = os.environ.get('CONF_FILE')
-#create logger
-log = logging.getLogger()
-# make it print to the console.
-console = logging.StreamHandler()
-log.addHandler(console)
-
-# open config file
-try:
-    config = configparser.ConfigParser()
-    config.read(conf_file)
-    config.sections()
-except IOError:
-    log.critical("*********** ERROR reading config file **********")
-    exit(1)
-
-# global variables that hold the results
-nodes = {}
-links = {}
-
-# check config file for mandatory sections
-if 'TARGETS' not in config or 'AUTH' not in config:
-    log.critical('Syntax error in configuration file. Please provide AUTH and TARGETS')
-    log.critical('ERROR: failed to load the configuration file')
-    log.critical('Exiting')
-    exit(1)
-
-authObj = Auth()
-authObj.token = authApi.login(Auth())
-print(authObj.token)
-subnetObj = Subnet("test_subnet")
-subnetObj.cf.cf_id = subnetApi.post_subnet(subnetObj, authObj)
-if(repeat_timer == None):
-    get_nodes()
-    get_ltps()
-    for n in nodes:
-        nodeApi.post_node(nodes[n],authObj)
-        for i in nodes[n].ltps.values():
-            ltpApi.post_ltp(i, authObj)
-else:
-    while(True):
+if __name__ == '__main__':
+    #set env variables
+    repeat_timer = os.environ.get('REPEAT_TIMER') 
+    conf_file = os.environ.get('CONF_FILE')
+    url_base = os.environ.get('API_SERVER_URL')
+    ssl_verify = os.environ.get('CERT_VERIFY')=='True'
+    #create logger
+    log = logging.getLogger()
+    # make it print to the console.
+    console = logging.StreamHandler()
+    log.addHandler(console)
+    
+    # open config file
+    try:
+        config = configparser.ConfigParser()
+        config.read(conf_file)
+        config.sections()
+    except IOError:
+        log.critical("*********** ERROR reading config file **********")
+        exit(1)
+    
+    # global variables that hold the results
+    nodes = {}
+    links = {}
+    
+    # check config file for mandatory sections
+    if 'TARGETS' not in config or 'AUTH' not in config:
+        log.critical('Syntax error in configuration file. Please provide AUTH and TARGETS')
+        log.critical('ERROR: failed to load the configuration file')
+        log.critical('Exiting')
+        exit(1)
+    
+    
+    api_client = apiClient(url_base, username='admin', password='admin',
+                            token='', ssl_verify=ssl_verify)
+    authApi.login(api_client)
+    print('AUTH_TOKEN: '+api_client.token)
+    subnetObj = Subnet("test_subnet")
+    subnetObj.cf.cf_id = subnetApi.post_subnet(subnetObj, api_client)
+    if(repeat_timer == None):
         get_nodes()
-        for n in nodes:
-            nodes[n].cf.cf_id = nodeApi.post_node(nodes[n], authObj)
         get_ltps()
         for n in nodes:
-            for l in nodes[n].ltps.values():
-                l.cf.cf_id = ltpApi.post_ltp(l, authObj)
-#                for c in l.ctps.values():
-#                    c.cf.cf_id = ctpApi.post_ctp(c, authObj)
-#        for l in links:
-#            l.cf.cf_id = linkApi.post_link(links[l], authObj)
-        time.sleep(int(repeat_timer))
-
+            nodeApi.post_node(nodes[n],api_client)
+            for i in nodes[n].ltps.values():
+                ltpApi.post_ltp(i, api_client)
+    else:
+        while(True):
+            get_nodes()
+            for n in nodes:
+                nodes[n].cf.cf_id = nodeApi.post_node(nodes[n], api_client)
+            get_ltps()
+            for n in nodes:
+                for l in nodes[n].ltps.values():
+                    l.cf.cf_id = ltpApi.post_ltp(l, api_client)
+            for n in nodes:
+                for l in nodes[n].ltps.values():
+                    for c in l.ctps.values():
+                        c.parentId = l.cf.cf_id
+                        c.cf.cf_id = ctpApi.post_ctp(c, api_client)
+            for l in links.values():
+                l.cf.cf_id = linkApi.post_link(l, api_client)
+            time.sleep(int(repeat_timer))
+    
