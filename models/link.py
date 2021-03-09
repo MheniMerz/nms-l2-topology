@@ -15,13 +15,14 @@ Link object Description:
 from models.common_fields import CommonFields
 
 class Link:
-    def __init__(self, src_ltp_name, dest_ltp_name, dest_ltp_id = 0, src_ltp_id = 0):
+    def __init__(self, src_ltp_name, dest_ltp_name, dest_ltp_id = 0, src_ltp_id = 0, status="UP"):
         name = "<-->".join([src_ltp_name, dest_ltp_name])
         self.cf = CommonFields(name, name)
         self.src_ltp_name = src_ltp_name
         self.dest_ltp_name = dest_ltp_name
         self.src_ltp_id = src_ltp_id
         self.dest_ltp_id = dest_ltp_id
+        self.status = status
 
     def to_string(self) -> str:
         result = "{\n\t"
