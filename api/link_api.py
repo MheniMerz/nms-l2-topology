@@ -19,7 +19,7 @@ class linkApi:
         print('post_api: '+str(data))
         api_client.send_request(url_suffix='topology/link', method='POST',
                                 head=head, data=data)
-        if api_client.response.status_code ==201:
+        if api_client.response.status_code == 201:
             logging.info(str(api_client.response.status_code)+' LINK created successfully')
             print(str(api_client.response.status_code)+' LINK created successfully')
             return str.split(api_client.response.headers['Location'],'/')[2]

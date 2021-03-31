@@ -21,7 +21,7 @@ class ltpApi:
         api_client.send_request(url_suffix='topology/ltp', method='POST',
                                 head=head, data=data)
         if api_client.response.status_code ==201:
-            #print(str(api_client.response.status_code)+' LTP created successfully')
+            print(str(api_client.response.status_code)+' LTP created successfully')
             logging.info(str(api_client.response.status_code)+' LTP created successfully')
             return str.split(api_client.response.headers['Location'],'/')[2]
         logging.warning(str(api_client.response.status_code)+' failed to create LTP')

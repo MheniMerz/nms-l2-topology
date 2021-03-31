@@ -208,15 +208,10 @@ if __name__ == '__main__':
                         link_src += "."+str(l.cf.name)+"<"
                         link_dest = ">"+nodes[n].cf.name.split(".")[0].upper()
                         link_dest += "."+str(l.cf.name) 
-                        print(link_src)
-                        print(link_dest)
-                        print(k)
                         if link_src in str(k):
                             links[k].src_ltp_id = l.cf.cf_id
-                            #print("================")
                         if link_dest in k:
                             links[k].dest_ltp_id = l.cf.cf_id
-                            print("================")
             for n in nodes:
                 for l in nodes[n].ltps.values():
                     for c in l.ctps.values():
@@ -224,7 +219,5 @@ if __name__ == '__main__':
                         c.cf.cf_id = ctpApi.post_ctp(c, api_client)
             for l in links.values():
                 l.cf.cf_id = linkApi.post_link(l, api_client)
-            for l in links:
-                print(l)
             time.sleep(int(repeat_timer))
     
