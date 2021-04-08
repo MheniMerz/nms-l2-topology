@@ -6,7 +6,7 @@ this is the IP topology discovery agent for the multiverse network management sy
 The topology discovery agent provides the controller with data gathered about network device configurations and connections regardless of vendor, this is acheived by sending CLI commands to extract the state of the network.
 
 ## Structure
-
+```bash
 .
 +-- main.py		//entrypoint
 +-- requirements.txt	//dependencies
@@ -37,7 +37,7 @@ The topology discovery agent provides the controller with data gathered about ne
 |   +-- config.ini
 |   +-- dns_binding.conf 
 |   +-- env_vars.conf
-
+```
 
 ## Deployment
 > Note: for this agent to work properly the multiverse controller needs to be deployed first, if you haven't deployed it yet please refer to the multiverse [deployment guide](https://github.com/multiverse-nms/multiverse-controller#deployment-instructions)
