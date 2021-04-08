@@ -42,3 +42,27 @@ The topology discovery agent provides the controller with data gathered about ne
 ## Deployment
 > Note: for this agent to work properly the multiverse controller needs to be deployed first, if you haven't deployed it yet please refer to the multiverse [deployment guide](https://github.com/multiverse-nms/multiverse-controller#deployment-instructions)
 
+### Prerequisites
+
+- docker (>=19.03)
+- docker-compose (>=1.17)
+- git
+
+### Get the code
+
+```
+git clone https://github.com/MheniMerz/nms-l2-topology.git
+cd nms-l2-topology
+```
+
+### Initial configuration
+
+Modify the file `./config/dns_bindings.conf` to contain all target nodes of your network.
+
+Modify the file `./config/config.ini` to contain hostnames of all your target network devices and the ssh credentials for them.
+
+### build and run
+```
+docker-compose .
+docker run .
+```
