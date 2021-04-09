@@ -4,8 +4,8 @@ WORKDIR /usr/src/app
 
 
 COPY requirements.txt /usr/src/app/
-COPY config.ini /usr/src/app/
-COPY dns-binding.conf /usr/src/app/
+COPY config/config.ini /usr/src/app/
+COPY config/dns-binding.conf /usr/src/app/
 COPY . .
 
 RUN pip install --no-cache-dir -r requirements.txt

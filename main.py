@@ -1,8 +1,5 @@
-import os
 import time 
-import logging
 import netmiko
-import configparser
 import json
 import concurrent.futures
 from netmiko.ssh_exception import  NetMikoTimeoutException
@@ -23,6 +20,7 @@ from models.ctp import Ctp
 from models.link import Link
 from models.auth import Auth
 from models.subnet import Subnet
+from config.config import Config
 
 def run_cmd(ip, dev_type, username, password, command):
     try:
@@ -62,14 +60,14 @@ def run_cmd(ip, dev_type, username, password, command):
 def get_nodes():
     return_value = ""
     threads = list()
-    for device in json.loads(config['TARGETS']['devices']):
+    for device in json.loads(conf.conf_file_contents['TARGETS']['devices']):
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future = executor.submit(
                     run_cmd,
                     device,
                     "cisco_ios",
-                    config['AUTH']['username'],
-                    config['AUTH']['password'],
+                    conf.conf_file_contents['AUTH']['username'],
+                    conf.conf_file_contents['AUTH']['password'],
                     "show lldp neighbors detail"
             )
             return_value = future.result()
@@ -94,14 +92,14 @@ def get_nodes():
 
 def get_ltps():
     threads = list()
-    for device in json.loads(config['TARGETS']['devices']):
+    for device in json.loads(conf.conf_file_contents['TARGETS']['devices']):
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future = executor.submit(
                     run_cmd,
                     device,
                     "cisco_ios",
-                    config['AUTH']['username'],
-                    config['AUTH']['password'],
+                    conf.conf_file_contents['AUTH']['username'],
+                    conf.conf_file_contents['AUTH']['password'],
                     "show interface"
                     )
             return_value = future.result()
@@ -137,8 +135,8 @@ def set_vlan_for_ltp(device):
                     run_cmd,
                     dev_name,
                     "cisco_ios",
-                    config['AUTH']['username'],
-                    config['AUTH']['password'],
+                    conf.conf_file_contents['AUTH']['username'],
+                    conf.conf_file_contents['AUTH']['password'],
                     "show interfaces switchport"
                     )
             return_value = future.result()
@@ -148,46 +146,28 @@ def set_vlan_for_ltp(device):
                 nodes[dev_name].ltps[str.split(tmp,".")[0]].ctps[tmp].assign_access_vlan(p.access_vlan)
                 nodes[dev_name].ltps[tmp].assign_native_vlan(p.native_vlan)
 
+
 if __name__ == '__main__':
-    #set env variables
-    repeat_timer = os.environ.get('REPEAT_TIMER') 
-    conf_file = os.environ.get('CONF_FILE')
-    url_base = os.environ.get('API_SERVER_URL')
-    ssl_verify = os.environ.get('CERT_VERIFY')=='True'
-    #create logger
-    log = logging.getLogger()
-    # make it print to the console.
-    console = logging.StreamHandler()
-    log.addHandler(console)
-    
-    # open config file
-    try:
-        config = configparser.ConfigParser()
-        config.read(conf_file)
-        config.sections()
-    except IOError:
-        log.critical("*********** ERROR reading config file **********")
-        exit(1)
-    
+    conf = Config()
     # global variables that hold the results
     nodes = {}
     links = {}
     
     # check config file for mandatory sections
-    if 'TARGETS' not in config or 'AUTH' not in config:
-        log.critical('Syntax error in configuration file. Please provide AUTH and TARGETS')
-        log.critical('ERROR: failed to load the configuration file')
-        log.critical('Exiting')
+    if 'TARGETS' not in conf.conf_file_contents or 'AUTH' not in conf.conf_file_contents:
+        conf.logger.critical('Syntax error in configuration file. Please provide AUTH and TARGETS')
+        conf.logger.critical('ERROR: failed to load the configuration file')
+        conf.logger.critical('Exiting')
         exit(1)
     
     
-    api_client = apiClient(url_base, username='admin', password='admin',
-                            token='', ssl_verify=ssl_verify)
+    api_client = apiClient(conf.url_base, username='admin', password='admin',
+                            token='', ssl_verify=conf.ssl_verify)
     authApi.login(api_client)
     print('AUTH_TOKEN: '+api_client.token)
     subnetObj = Subnet("test_subnet")
     subnetObj.cf.cf_id = subnetApi.post_subnet(subnetObj, api_client)
-    if(repeat_timer == None):
+    if(conf.repeat_timer == None):
         get_nodes()
         get_ltps()
         for n in nodes:
@@ -219,5 +199,5 @@ if __name__ == '__main__':
                         c.cf.cf_id = ctpApi.post_ctp(c, api_client)
             for l in links.values():
                 l.cf.cf_id = linkApi.post_link(l, api_client)
-            time.sleep(int(repeat_timer))
+            time.sleep(int(conf.repeat_timer))
     
