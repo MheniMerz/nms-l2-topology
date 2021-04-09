@@ -1,0 +1,7 @@
+rename-session nms-l2
+rename-window main.py
+split-window -h
+new-window -n models
+send "cd ./models/"
+split-window -h
+new-window -n terminal

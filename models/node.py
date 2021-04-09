@@ -1,47 +1,56 @@
+'''
+Node Object Description:
+    {
+     common_fields{
+      "id": 0,
+      "name": "string",
+      "label": "string",
+      "description": "string",
+      "info": {}
+     }
+     "vsubnetId": 0,
+     "hwaddr": "string",
+     "status": "UP",
+     "type": "switch",
+     "posx": 0,
+     "posy": 0,
+     "location": "string"
+    }
+'''
 import json
-
-def lldp_capability_to_device_type(cap: str) -> str:
-    result = "Unkown"
-    switcher = {
-            "R":"Router",
-            "B":"Bridge",
-            "T":"Telephone",
-            "C":"DOCSIS Cable Device",
-            "W":"WLAN Access Point",
-            "P":"Repeater",
-            "S":"Station",
-            "O":"Other",
-            "" :"Switch"
-            }
-    result  = switcher[cap]
-    return result
-    
+from models.common_fields import CommonFields
 
 class Node:
-    def __init__(self, name: str, chassis_id: str, mgmt_ip: str, capability: str):
-        self.name = name
-        self.chassis_id = chassis_id
+    def __init__(self, name: str, label:str, hwaddr: str, location:str,  mgmt_ip: str, capability: str, subnet_id=1, status="UP", description=""):
+        self.cf = CommonFields(name,label,0,description)
+        self.hwaddr = hwaddr
+        self.location = location
         self.mgmt_ip = mgmt_ip
-        self.node_type = lldp_capability_to_device_type(capability)
-        self.interfaces: dict [str, "Interface"] = {}
+        self.node_type = self.lldp_capability_to_device_type(capability)
+        self.status = status.upper()
+        self.subnet_id=subnet_id
+        self.ltps: dict [str, "Ltp"] = {}
 
     def to_string(self) -> str:
         result  = "{\n\t"
-        result += "hostname: "+self.name +"\n\t"
-        result += "chassis_id: "+self.chassis_id +"\n\t"
-        result += "management_ip: "+self.mgmt_ip +"\n\t"
+        result += self.cf.to_string()
+        result += "subnet: "+self.subnet +"\n\t"
+        result += "hwaddr: "+self.hwaddr +"\n\t"
+        result += "status: "+self.status +"\n\t"
         result += "device_type: "+ self.node_type +"\n\t"
-        result += "interfaces: [\n\t"+self.interfaces_to_string()+"]"
+        result += "location: "+self.location +"\n\t"
+        result += "management_ip: "+self.mgmt_ip +"\n\t"
+        result += "ltps: [\n\t"+self.ltps_to_string()+"]"
         result += "\n}"
         return result
 
-    def add_interface(self, interface: "Interface") -> None:
-        self.interfaces[interface.name] = interface
+    def add_ltp(self, ltp: "Ltp") -> None:
+        self.ltps[ltp.cf.name] = ltp
     
-    def interfaces_to_string(self) -> str:
+    def ltps_to_string(self) -> str:
         result = ""
-        for k in self.interfaces:
-            result += self.interfaces[k].to_string()
+        for k in self.ltps:
+            result += self.ltps[k].to_string()
         return result
 
     def is_switch(self) -> bool:
@@ -55,5 +64,23 @@ class Node:
         return False
 
     def name_from_fqdn(self) -> str:
-        return self.name.split(".")[0]
+        return self.cf.name.split(".")[0]
+
+    @staticmethod
+    def lldp_capability_to_device_type(cap: str) -> str:
+        result = "Unkown"
+        switcher = {
+                "R":"ipRouter",
+                "B":"ipBridge",
+                "T":"ipTelephone",
+                "C":"ipDOCSIS Cable Device",
+                "W":"ipWLAN Access Point",
+                "P":"ipRepeater",
+                "S":"ipStation",
+                "O":"ipOther",
+                "" :"ipSwitch"
+                }
+        result  = switcher[cap]
+        return result
+
 
