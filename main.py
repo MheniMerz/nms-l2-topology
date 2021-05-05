@@ -164,7 +164,7 @@ if __name__ == '__main__':
     api_client = apiClient(conf.url_base, username='admin', password='admin',
                             token='', ssl_verify=conf.ssl_verify)
     authApi.login(api_client)
-    print('AUTH_TOKEN: '+api_client.token)
+    print('=============================\nAUTH_TOKEN: '+api_client.token)
     subnetObj = Subnet("test_subnet")
     subnetObj.cf.cf_id = subnetApi.post_subnet(subnetObj, api_client)
     if(conf.repeat_timer == None):

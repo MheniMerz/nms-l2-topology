@@ -1,9 +1,7 @@
 import unittest
 import os
-from .api.auth_api import authApi
-from .api.api import apiClient
 
-class testAuthApi(unittest.TestCase):
+class testConfig(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -28,7 +26,7 @@ class testAuthApi(unittest.TestCase):
         self.auth_1 = None
         self.auth_2 = None
 
-    def test_login(self):
+    def test_read_config(self):
         self.assertEqual(self.auth_1.login(self.api_client), '201')
         self.assertEqual(self.auth_2.login(self.api_client), '401')
 
